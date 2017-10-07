@@ -142,7 +142,7 @@ DrawImage8( idispwin, p, x, y, w, h, scale, pedestal)
   
   /* note: have to pad epic so that it's a multiple of 32-bits per line */
   size = w * h;
-  bperlin = (w + 3) & (~3);
+  bperlin = (dispDEEP==24) ? ((w+1)*4 + 3) & (~3): (w + 3) & (~3);
   pad = bperlin - w;
   
   if( size != lastsize || !epic ) { /* have to re-allocate epic */
@@ -162,17 +162,24 @@ DrawImage8( idispwin, p, x, y, w, h, scale, pedestal)
       value =  (pp[j] * scale) + pedestal;
       if (value < 0.0) value = 0.0;
       else if (value > 255.0) value = 255.0;
-      ep[j] = (byte) value;
+      if (dispDEEP==24) {
+        ep[j*4] = (byte) value;
+        ep[j*4+1] = (byte) value;
+        ep[j*4+2] = (byte) value;
+      } else {
+        ep[j] = (byte) value;
+      }
     }
     ep += bperlin;
     pp = &(pp[w]); 
   }
   
-  for (i=0, ep=epic; i<bperlin*h; i++,ep++) {
-    /* map gray values to colormap indicies */
-    *ep = (byte) grays[ *ep >> GRAYSHIFT];
+  if (dispDEEP != 24) {
+    for (i=0, ep=epic; i<bperlin*h; i++,ep++) {
+      /* map gray values to colormap indicies */
+      *ep = (byte) grays[ *ep >> GRAYSHIFT];
+    }
   }
-  
   
   if (!ximage || size != lastsize) {    /* create XImage  */
     if( ximage ) 

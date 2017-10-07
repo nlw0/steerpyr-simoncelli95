@@ -17,6 +17,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/time.h>
 #include "spyramid.h"
 #include "matrix_pgm.h"
@@ -99,14 +100,14 @@ main(argc, argv)
   DisplayMatrix(P->levels[level]->subband[0],0,"Steer",0,0,scale,pedestal);
 
   /* Do one steering to determine time delay */
-  gettimeofday(&tp);
+  gettimeofday(&tp, NULL);
   usecs = tp.tv_usec;
 
   N = SteerPyramid(P,level,((float) 1) * 2 * 3.14159 / 29);
   UpdateDisplayMatrix(N,0,scale,pedestal);
   DeleteMatrix(N);
   
-  gettimeofday(&tp);
+  gettimeofday(&tp, NULL);
   usecs = tp.tv_usec - usecs;    /* Compute time difference in microseconds */
 
   usecs = 32000 - usecs;
