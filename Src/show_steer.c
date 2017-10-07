@@ -118,9 +118,13 @@ main(argc, argv)
   while(1){
     for (i=0;i<Niter;i++){
       N = SteerPyramid(P,level,((float) i) * 2 * 3.14159 / Niter);
+      char name[100];
+      sprintf(name, "buska%04d.pgm", i);
+      SaveMatrix(N, name);
       UpdateDisplayMatrix(N,0,scale,pedestal);
       DeleteMatrix(N);
       usleep(usecs);
+
     }
   }
 }
