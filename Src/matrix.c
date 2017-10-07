@@ -245,15 +245,10 @@ int WriteMatrixToStream(MATRIX M, FILE* Outfile){
 
   if ((Outfile == NULL) || (M == NULL)) return (0);
 
-  fprintf(Outfile,"P2\n");
   fprintf(Outfile,"%d %d\n",M->rows,M->columns);
-  fprintf(Outfile,"255\n");
   for (r=0;r<M->rows;r++){
     for (c=0;c<M->columns;c++){
-      //fprintf(Outfile,"%e ",MATRIX_LOC(M,r,c));
-      float vv = floor(128.5 + MATRIX_LOC(M,r,c));
-      vv = (vv<0)?0:(vv>255)?255:vv;
-      fprintf(Outfile,"%d ", (int)vv);
+      fprintf(Outfile,"%e ",MATRIX_LOC(M,r,c));
     }
     fprintf(Outfile,"\n");
   }
