@@ -81,9 +81,11 @@ main(argc, argv)
   min_val = P->levels[level]->subband[0]->values[0];
   max_val = min_val;
 
+  int Niter = 99;
+  
   /* Do one complete rotation to compute max and min values */
-  for (i=0;i<59;i++){
-    N = SteerPyramid(P,level,((float) i) * 2 * 3.14159 / 59);
+  for (i=0;i<Niter;i++){
+    N = SteerPyramid(P,level,((float) i) * 2 * 3.14159 / Niter);
     for(j=0;j<(N->rows*N->columns);j++){
       new_val = N->values[j];
       if (min_val > new_val) min_val = new_val;
@@ -103,7 +105,7 @@ main(argc, argv)
   gettimeofday(&tp, NULL);
   usecs = tp.tv_usec;
 
-  N = SteerPyramid(P,level,((float) 1) * 2 * 3.14159 / 59);
+  N = SteerPyramid(P,level,((float) 1) * 2 * 3.14159 / Niter);
   UpdateDisplayMatrix(N,0,scale,pedestal);
   DeleteMatrix(N);
   
@@ -114,8 +116,8 @@ main(argc, argv)
   if (usecs < 0) usecs = 0;
   
   while(1){
-    for (i=0;i<59;i++){
-      N = SteerPyramid(P,level,((float) i) * 2 * 3.14159 / 59);
+    for (i=0;i<Niter;i++){
+      N = SteerPyramid(P,level,((float) i) * 2 * 3.14159 / Niter);
       UpdateDisplayMatrix(N,0,scale,pedestal);
       DeleteMatrix(N);
       usleep(usecs);
